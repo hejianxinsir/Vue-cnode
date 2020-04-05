@@ -3,7 +3,7 @@
     <div class="loading" v-if="isLoading">
       <img src="../assets/loading.gif">
     </div>
-    <div class="postlist">
+    <div class="postlist" v-else>
       <ul>
         <li class="toobar">
           <span>全部</span>
@@ -24,9 +24,11 @@
               {{post | tabFormatter}}
             </span>
           </span>
-          <span class="title">
-            {{post.title}}
-          </span>
+          <router-link :to="{name: 'post_content', params: {id: post.id}}">
+            <span class="title">
+              {{post.title}}
+            </span>
+          </router-link>
           <span class="last_reply_at">
             {{post.last_reply_at | formatDate}}
           </span>
@@ -95,6 +97,10 @@ ul > li{
 }
 ul > li > .count{
   margin: 0 15px;
+}
+ul > li a{
+  text-decoration: none;
+  border-bottom: 1px solid #79b301;
 }
 .last_reply_at{
   position: absolute;
