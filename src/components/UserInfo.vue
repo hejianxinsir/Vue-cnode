@@ -6,17 +6,46 @@
       <img src="../assets/loading.gif">
     </div>
     <div class="userInfomation">
+
       <section>
         <p>主页</p>
         <img :src="userinfo.avatar_url" alt="">
-        <span class="username">{{userinfo.loginname}}</span>
-        <p class="score">{{userinfo.score}} 积分</p>
+        <span>{{userinfo.loginname}}</span>
+        <p>{{userinfo.score}} 积分</p>
         <a href="https://github.com">
-          <img src="../assets/github.svg" width=20 height=20>
+          <img src="../assets/github.svg">
           @{{userinfo.githubUsername}}
         </a>
-        <p class="createTime">注册时间 {{userinfo.create_at|formatDate}}</p>
+        <p>注册时间 {{userinfo.create_at|formatDate}}</p>
       </section>
+
+      <div class="create_topics">
+        <p>最近创建的话题</p>
+        <ul>
+          <li v-for="item in items">
+            <img :src="item.author.avatar_url">
+            <router-link :to="{name: 'post_content', params: {id: item.id}}">
+              <span class="title">{{item.title}}</span>
+            </router-link>
+            <span class="last_reply_at">{{item.last_reply_at|formatDate}}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="replies">
+        <p>最近参与的话题</p>
+        <ul>
+          <li v-for="reply in replies">
+            <img :src="reply.author.avatar_url">
+            <router-link :to="{name: 'post_content', params: {id: reply.id}}">
+              <span class="title">{{reply.title}}</span>
+            </router-link>
+            <span class="last_reply_at">{{reply.last_reply_at|formatDate}}</span>
+          </li>
+        </ul>
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -27,7 +56,9 @@ export default {
   data(){
     return {
       isLoading: false,
-      userinfo: {}
+      userinfo: {},
+      items: [],
+      replies: []
     }
   },
   methods: {
@@ -35,9 +66,12 @@ export default {
       this.$http.get(`https://cnodejs.org/api/v1/user/${this.$route.params.name}`)
         .then( res => {
           console.log('userinfo response')
+          console.log(this.userinfo)
+          console.log(res)
           this.isLoading = false
           this.userinfo = res.data.data
-          console.log(this.userinfo)
+          this.items = res.data.data.recent_topics
+          this.replies = res.data.data.recent_replies
         })
         .catch( err => console.log(err) )
     }
@@ -67,11 +101,32 @@ export default {
   .userInfomation li {
     list-style:none;
   }
-  .userInfomation .replies,
+  .userInfomation .create_topics,
   .userInfomation .topics {
     font-size: 0.72rem;
-    border-top: 10px #DDDDDD solid;
+    border-top: 10px solid lightgray;
   }
+.userInfomation .create_topics, .userInfomation .replies, section{
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  margin: 20px 0;
+}
+.userInfomation li{
+  border-bottom: 1px solid lightgray;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+
+  position: relative;
+}
+.userInfomation li .title{
+  margin-left: 15px;
+}
+.userInfomation .last_reply_at{
+  position: absolute;
+  right: 20px;
+  color: gray;
+}
   .userInfomation > div > p {
     padding: 12px 0 12px 12px;
     background-color: rgba(212, 205, 205, 0.17);

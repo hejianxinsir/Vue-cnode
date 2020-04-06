@@ -1,6 +1,5 @@
 <template>
   <div class="article">
-    <!-- loding 动画 -->
     <div class="loading" v-if="isLoading">
       <img src="../assets/loading.gif">
     </div>
@@ -17,7 +16,8 @@
         </ul>
         <div v-html="post.content" class="topic_content"></div>
       </div>
-      <div class="reply">
+      <div id="reply">
+        <div class="toopbar">回复</div>
         <div v-for="(reply,index) in post.replies" class="replySec">
           <div class="replyUp">
             <router-link :to="{name: 'user_info', params: {name: reply.author.loginname}}">
@@ -27,7 +27,7 @@
               <span>{{reply.author.loginname}}</span>
             </router-link>
             <span>{{index+1}}楼</span>
-            👍<span v-if="reply.ups.length > 0">{{reply.ups.leghth}}</span>
+            👍 <span v-if="(reply.ups.length > 0)">{{reply.ups.length}}</span>
             <span v-else></span>
           </div>
           <p v-html="reply.content"></p>
@@ -70,7 +70,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 @import url('../assets/markdown-github.css');
 /* @import url('../assets/github.css'); */
   .topbar {
@@ -151,6 +151,5 @@ export default {
   .markdown-text img {
     width: 92% !important;
   }
-
 
 </style>
