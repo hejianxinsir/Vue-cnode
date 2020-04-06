@@ -1,46 +1,35 @@
-// https://cnodejs.org/api/v1/topic + 帖子 ID
-
 <template>
   <div class="article">
+    <!-- loding 动画 -->
     <div class="loading" v-if="isLoading">
       <img src="../assets/loading.gif">
     </div>
     <div v-else>
       <div class="topic_header">
-        <div class="span-wrapper">
-          <span :class="[{put_good:(post.good  == true),put_top:(post.top  == true),
-          'topiclist-tab':(post.good  != true && post.top  != true)}]">
-              <span>
-                {{post | tabFormatter}}
-              </span>
-          </span>
-          <span class="topic_title">{{post.title}}</span>
-        </div>
+        <div class="topic_title">{{post.title}}</div>
         <ul>
           <li>发布于：{{post.create_at | formatDate}}</li>
-          <li>| 作者：{{post.author.loginname}}</li>
+          <li>| 作者：
+            {{post.author.loginname}}
+          </li>
           <li>| {{post.visit_count}} 次浏览</li>
           <li>| 来自{{post | tabFormatter}}</li>
         </ul>
+        <div v-html="post.content" class="topic_content"></div>
       </div>
-      <div v-html="post.content" class="topic_content"></div>
-      <div class="reply-wrapper">
-        <div class="span_reply_wrapper">
-          <span class="content_reply_count">{{post.reply_count}}</span>
-          <span class="topbar">回复</span>
-        </div>
-        <div v-for="(reply, index) in post.replies">
-          <router-link :to="">
-            <img :src="post.author.avatar_url">
-          </router-link>
-          <router-link :to="">
-            <span>{{post.author.loginname}}</span>
-          </router-link>
-          <span>{{index + 1}} 楼</span>
-          <span v-if="reply.ups.length >0 ">
-            👍{{reply.ups.length }}
-          </span>
-          <span v-else></span>
+      <div class="reply">
+        <div v-for="(reply,index) in post.replies" class="replySec">
+          <div class="replyUp">
+            <router-link :to="{name: 'user_info', params: {name: reply.author.loginname}}">
+              <img :src="reply.author.avatar_url" alt="">
+            </router-link>
+            <router-link :to="{name: 'user_info', params: {name: reply.author.loginname}}">
+              <span>{{reply.author.loginname}}</span>
+            </router-link>
+            <span>{{index+1}}楼</span>
+            👍<span v-if="reply.ups.length > 0">{{reply.ups.leghth}}</span>
+            <span v-else></span>
+          </div>
           <p v-html="reply.content"></p>
         </div>
       </div>
@@ -81,94 +70,87 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import url('../assets/markdown-github.css');
+/* @import url('../assets/github.css'); */
+  .topbar {
+    padding: 10px;
+    background-color: #f6f6f6;
+    height: 16px;
+    font-size: 12px;
+    margin-top: 10px;
+  }
 
-.reply-wrapper{
-  margin: 0 10px;
-  border-radius: 5px;
-}
-.span_reply_wrapper{
-  background: #f6f6f6;
-  margin-bottom: 7px;
-}
-.span_reply_wrapper span{
-  display: inline-block;
-  padding: 7px 0;
-}
-.reply-wrapper img{
-  width: 30px; height: 30px;
-}
-.reply-wrapper .topbar{
-  font-size: 16px;
-  background: #f6f6f6;
-}
+  .article:not(:first-child) {
+    margin-right: 340px;
+    margin-top: 15px;
+  }
 
-.content_reply_count{
-  color: brown;
-  font-size: 16px;
-  margin-left: 7px;
-}
+  #reply, .topic_header {
+    background-color: #fff;
+  }
 
-.topic_content{
-  margin: 0 10px;
-}
+  #reply {
+    margin-top: 15px;
+  }
 
-.article ul{
-  list-style: none;
-}
-.article ul > li{
-  font-size: 14px;
-  color: lightgray;
-  display: inline-block;
-  /* margin: 0 5px; */
-}
-.article .span-wrapper{
-  display: flex;
-  align-items: center;
-}
-.article{
-  border: 1px solid lightgray;
-  margin: 20px 0;
-  border-radius: 5px;
-}
-.article .topic_header{
-  margin: 10px;
-}
-.article .topic_header{
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 10px;
-}
+  #reply img {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    bottom: -9px;
+  }
 
-.article .topic_title{
-  font-size: 22px;
-  color: #2c3135;
-  font-weight: bold;
-}
+  #reply a, #reply span {
+    font-size: 13px;
+    color: #666;
+    text-decoration: none;
+  }
+  .replySec{
+    border-bottom:1px solid #e5e5e5;
+    padding:0 10px;
+  }
 
-.put_good, .put_top {
-  background: #80bd01;
-  padding: 2px 4px;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  color: #fff;
-  font-size: 12px;
-  margin-right: 10px;
-}
+  .loading {
+    text-align: center;
+    padding-top: 300px;
+  }
 
-.topiclist-tab {
-  background-color: #e5e5e5;
-  color: #999;
-  padding: 2px 4px;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  font-size: 12px;
-  margin-right: 10px;
-}
+  .replyUp a:nth-of-type(2) {
+    margin-left: 0px;
+    display: inline-block;
+  }
+
+  .topic_header {
+    padding: 10px;
+  }
+
+  .topic_title {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 8px;
+  }
+
+  .topic_header ul {
+    list-style: none;
+    padding: 0px 0px;
+    margin: 6px 0px;
+  }
+
+  .topic_header li {
+    display: inline-block;
+    font-size: 12px;
+    color: #838383;
+  }
+
+  .topic_content {
+    border-top: 1px solid #e5e5e5;
+    padding: 0 10px;
+  }
+
+  .markdown-text img {
+    width: 92% !important;
+  }
 
 
 </style>

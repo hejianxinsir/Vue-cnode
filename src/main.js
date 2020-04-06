@@ -59,9 +59,9 @@ Vue.filter('formatDate', function(str){
     return parseInt((time / 3600000 )) + '小时前'
   }else if((time / 86400000) < 31){
     return parseInt((time / 86400000)) + '天前'
-  }else if((time / 2592000000)){
+  }else if((time / 2592000000) < 12){
     return parseInt((time / 2592000000)) + '月前'
-  }else if((time / 31104000000)){
+  }else{
     return parseInt((time / 31104000000)) + '年前'
   }
 })
