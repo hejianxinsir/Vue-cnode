@@ -66,6 +66,12 @@ export default {
   beforeMount(){
     this.isLoading = true
     this.getArticle()
+  },
+  // 检测路由变化的函数 watch
+  watch: {
+    '$route'(to, from){
+      this.getArticle()
+    }
   }
 }
 </script>
@@ -73,6 +79,14 @@ export default {
 <style>
 @import url('../assets/markdown-github.css');
 /* @import url('../assets/github.css'); */
+.article{
+  max-width: 70%;
+  border: 1px solid lightgray;
+  margin: 30px 0;
+  border-radius: 5px;
+
+  float: left;
+}
   .topbar {
     padding: 10px;
     background-color: #f6f6f6;
@@ -145,7 +159,7 @@ export default {
 
   .topic_content {
     border-top: 1px solid #e5e5e5;
-    padding: 0 10px;
+    padding: 8px 2px;
   }
 
   .markdown-text img {

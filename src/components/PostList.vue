@@ -24,7 +24,7 @@
               {{post | tabFormatter}}
             </span>
           </span>
-          <router-link :to="{name: 'post_content', params: {id: post.id}}">
+          <router-link :to="{name: 'post_content', params: {id: post.id, name: post.author.loginname}}">
             <span class="title">
               {{post.title}}
             </span>
@@ -54,6 +54,7 @@ export default {
         limit: 10
       })
         .then(res => {
+          console.log('PostList res')
           console.log(res.data.data)
           this.isLoading = false
           this.posts = res.data.data
