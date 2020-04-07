@@ -7,6 +7,7 @@ import Article from '../components/Article'
 import PostList from '../components/PostList'
 import UserInfo from '../components/UserInfo'
 import SideBar from '../components/SideBar'
+import Pagination from '../components/Pagination'
 
 export default new Router({
   routes: [
@@ -14,7 +15,8 @@ export default new Router({
       name: 'root',
       path: '/',
       components: {
-        main: PostList
+        main: PostList,
+        pagination: Pagination
       }
     },
     {
